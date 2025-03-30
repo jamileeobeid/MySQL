@@ -1,34 +1,36 @@
 -- CREATING THE DATABASE
-CREATE DATABASE BankDB;
+CREATE DATABASE IF NOT EXISTS BankDB;
 USE BankDB;
 
 -- CREATING A TABLE FOR CUSTOMERS
-CREATE TABLE Customers (
+CREATE TABLE IF NOT EXISTS Customers (
     customer_id INT AUTO_INCREMENT PRIMARY KEY,
     first_name VARCHAR(50) NOT NULL,
     last_name VARCHAR(50) NOT NULL,
     email VARCHAR(100) UNIQUE NOT NULL,
     phone VARCHAR(15) UNIQUE NOT NULL
-);
+) ENGINE=InnoDB;
 
 -- CREATING A TABLE FOR ACCOUNTS
-CREATE TABLE Accounts (
+CREATE TABLE IF NOT EXISTS Accounts (
     account_id INT AUTO_INCREMENT PRIMARY KEY,
-    customer_id INT,
+    customer_id INT NOT NULL,
     account_type ENUM('Checking', 'Savings', 'Credit') NOT NULL,
     balance DECIMAL(12,2) NOT NULL DEFAULT 0.00,
-    FOREIGN KEY (customer_id) REFERENCES Customers(customer_id) ON DELETE CASCADE
-);
+    FOREIGN KEY (customer_id) REFERENCES Customers(customer_id) ON DELETE CASCADE,
+    INDEX idx_customer (customer_id)
+) ENGINE=InnoDB;
 
 -- CREATING A TABLE FOR TRANSACTIONS
-CREATE TABLE Transactions (
+CREATE TABLE IF NOT EXISTS Transactions (
     transaction_id INT AUTO_INCREMENT PRIMARY KEY,
-    account_id INT,
+    account_id INT NOT NULL,
     transaction_type ENUM('Deposit', 'Withdrawal', 'Transfer') NOT NULL,
     amount DECIMAL(12,2) NOT NULL,
     transaction_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (account_id) REFERENCES Accounts(account_id) ON DELETE CASCADE
-);
+    FOREIGN KEY (account_id) REFERENCES Accounts(account_id) ON DELETE CASCADE,
+    INDEX idx_account (account_id)
+) ENGINE=InnoDB;
 
 -- INSERTING SAMPLE DATA INTO CUSTOMERS
 INSERT INTO Customers (first_name, last_name, email, phone) VALUES
