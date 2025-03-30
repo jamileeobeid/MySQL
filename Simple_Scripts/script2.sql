@@ -1,36 +1,38 @@
 -- CREATING THE DATABASE
-CREATE DATABASE HospitalDB;
+CREATE DATABASE IF NOT EXISTS HospitalDB;
 USE HospitalDB;
 
 -- CREATING A TABLE FOR PATIENTS
-CREATE TABLE Patients (
+CREATE TABLE IF NOT EXISTS Patients (
     patient_id INT AUTO_INCREMENT PRIMARY KEY,
     first_name VARCHAR(50) NOT NULL,
     last_name VARCHAR(50) NOT NULL,
     date_of_birth DATE NOT NULL,
     gender ENUM('Male', 'Female', 'Other') NOT NULL,
     phone VARCHAR(15) UNIQUE NOT NULL
-);
+) ENGINE=InnoDB;
 
 -- CREATING A TABLE FOR DOCTORS
-CREATE TABLE Doctors (
+CREATE TABLE IF NOT EXISTS Doctors (
     doctor_id INT AUTO_INCREMENT PRIMARY KEY,
     first_name VARCHAR(50) NOT NULL,
     last_name VARCHAR(50) NOT NULL,
     specialty VARCHAR(100) NOT NULL,
     phone VARCHAR(15) UNIQUE NOT NULL
-);
+) ENGINE=InnoDB;
 
 -- CREATING A TABLE FOR APPOINTMENTS
-CREATE TABLE Appointments (
+CREATE TABLE IF NOT EXISTS Appointments (
     appointment_id INT AUTO_INCREMENT PRIMARY KEY,
-    patient_id INT,
-    doctor_id INT,
+    patient_id INT NOT NULL,
+    doctor_id INT NOT NULL,
     appointment_date DATETIME NOT NULL,
     reason TEXT NOT NULL,
     FOREIGN KEY (patient_id) REFERENCES Patients(patient_id) ON DELETE CASCADE,
-    FOREIGN KEY (doctor_id) REFERENCES Doctors(doctor_id) ON DELETE CASCADE
-);
+    FOREIGN KEY (doctor_id) REFERENCES Doctors(doctor_id) ON DELETE CASCADE,
+    INDEX idx_patient (patient_id),
+    INDEX idx_doctor (doctor_id)
+) ENGINE=InnoDB;
 
 -- INSERTING SAMPLE DATA INTO PATIENTS
 INSERT INTO Patients (first_name, last_name, date_of_birth, gender, phone) VALUES
@@ -58,4 +60,5 @@ SELECT
     Appointments.reason
 FROM Appointments
 JOIN Patients ON Appointments.patient_id = Patients.patient_id
-JOIN Doctors ON Appointments.doctor_id = Doctors.doctor_id;
+JOIN Doctors ON Appointments.doctor_id = Doctors.doctor_id
+ORDER BY Appointments.appointment_date;
