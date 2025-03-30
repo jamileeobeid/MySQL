@@ -29,7 +29,7 @@ CREATE TABLE IF NOT EXISTS Enrollments (
     FOREIGN KEY (course_id) REFERENCES Courses(course_id) ON DELETE CASCADE,
     INDEX idx_student (student_id),
     INDEX idx_course (course_id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB;
 
 -- INSERTING SAMPLE DATA INTO STUDENTS
 INSERT INTO Students (first_name, last_name, email, enrollment_date) VALUES
