@@ -1,33 +1,35 @@
 -- CREATING THE DATABASE
-CREATE DATABASE UniversityDB;
+CREATE DATABASE IF NOT EXISTS UniversityDB;
 USE UniversityDB;
 
 -- CREATING A TABLE FOR STUDENTS
-CREATE TABLE Students (
+CREATE TABLE IF NOT EXISTS Students (
     student_id INT AUTO_INCREMENT PRIMARY KEY,
     first_name VARCHAR(50) NOT NULL,
     last_name VARCHAR(50) NOT NULL,
     email VARCHAR(100) UNIQUE NOT NULL,
-    enrollment_date DATE NOT NULL
-);
+    enrollment_date DATE NOT NULL DEFAULT CURRENT_DATE
+) ENGINE=InnoDB;
 
 -- CREATING A TABLE FOR COURSES
-CREATE TABLE Courses (
+CREATE TABLE IF NOT EXISTS Courses (
     course_id INT AUTO_INCREMENT PRIMARY KEY,
     course_name VARCHAR(100) NOT NULL,
     course_code VARCHAR(10) UNIQUE NOT NULL,
-    credits INT NOT NULL
-);
+    credits INT NOT NULL CHECK (credits > 0)
+) ENGINE=InnoDB;
 
 -- CREATING A TABLE FOR ENROLLMENTS (Many-to-Many relationship)
-CREATE TABLE Enrollments (
+CREATE TABLE IF NOT EXISTS Enrollments (
     enrollment_id INT AUTO_INCREMENT PRIMARY KEY,
-    student_id INT,
-    course_id INT,
-    enrollment_date DATE NOT NULL,
+    student_id INT NOT NULL,
+    course_id INT NOT NULL,
+    enrollment_date DATE NOT NULL DEFAULT CURRENT_DATE,
     FOREIGN KEY (student_id) REFERENCES Students(student_id) ON DELETE CASCADE,
-    FOREIGN KEY (course_id) REFERENCES Courses(course_id) ON DELETE CASCADE
-);
+    FOREIGN KEY (course_id) REFERENCES Courses(course_id) ON DELETE CASCADE,
+    INDEX idx_student (student_id),
+    INDEX idx_course (course_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- INSERTING SAMPLE DATA INTO STUDENTS
 INSERT INTO Students (first_name, last_name, email, enrollment_date) VALUES
@@ -53,4 +55,5 @@ SELECT
     Enrollments.enrollment_date
 FROM Enrollments
 JOIN Students ON Enrollments.student_id = Students.student_id
-JOIN Courses ON Enrollments.course_id = Courses.course_id;
+JOIN Courses ON Enrollments.course_id = Courses.course_id
+ORDER BY Enrollments.enrollment_date;
