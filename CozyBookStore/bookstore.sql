@@ -186,12 +186,16 @@ VALUES
 INSERT INTO customer_info (phone_number, name)
 VALUES 
 (9876543210, 'Emily Brown'),
-(8765432190, 'David Green');
+(8765432190, 'David Green'),
+(2004522801, 'Juliette Dubois'),
+(7467920283, 'Sophie Boucher');
 
 INSERT INTO customers (customer_id, phone_number)
 VALUES 
 (101, 9876543210),
-(102, 8765432190);
+(102, 8765432190),
+(103, 2004522801),
+(104, 7467920283);
 
 INSERT INTO subscribed_customers (customer_id, discount_percentage)
 VALUES 
