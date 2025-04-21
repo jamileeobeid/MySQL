@@ -181,7 +181,7 @@ VALUES
 (1, 'Alice Johnson', 'f', NULL),
 (2, 'Bob Smith', 'p', 1),
 (3, 'Clara Lee', 'f', 1),
-(4, 'John Carter', 'p', NULL):
+(4, 'John Carter', 'p', NULL);
   
 INSERT INTO customer_info (phone_number, name)
 VALUES 
